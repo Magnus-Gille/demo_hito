@@ -87,6 +87,48 @@ At the time of this snapshot, the database contained:
 - 27 leads
 - 27 evidence rows
 
+## Next steps
+
+If this demo is useful, reasonable next steps would be:
+
+- run it on a timer, for example every Monday morning
+- write the SQLite database to a shared folder so the team can see the same data
+- add a simple UI for browsing and triaging leads
+- add more intelligence to the scoring, filtering, and deduplication
+- enrich companies with more public sources such as company websites, news, and official registries
+- push new leads into other tools such as a CRM, Airtable, Notion, Slack, email, or Google Sheets
+- keep a changelog of what is new since the last run
+- add manual review flags such as "interesting", "contacted", "ignore", and "customer"
+- replace HTML scraping with a paid search API if reliability becomes important
+- split the pipeline into discovery, enrichment, review, and export steps
+
+## LinkedIn data and limitations
+
+Getting more real data from LinkedIn would be useful, but this is constrained.
+
+In practical terms:
+
+- LinkedIn does have official APIs
+- but most useful access is restricted, approved, or partner-based
+- this project does not currently use any LinkedIn API
+- this project should not rely on automated scraping of LinkedIn pages
+
+What appears to be possible with official LinkedIn APIs:
+
+- sign-in and basic authenticated member data
+- posting and social actions on behalf of an authenticated user
+- marketing use cases such as ads, company page management, and lead-sync for your own campaigns
+- some organization lookup use cases, with OAuth and LinkedIn permissions
+- partner programs for Sales Navigator and Talent integrations
+
+What this does not give you, as a normal public developer workflow:
+
+- a simple open API for broad lead-generation searches across LinkedIn
+- a general-purpose API for scraping arbitrary companies, profiles, or search result pages
+- permission to automate crawling of LinkedIn pages directly
+
+So for this demo, LinkedIn should be treated as a signal source, not a fully accessible structured database.
+
 ## Install
 
 ```bash
