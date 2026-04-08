@@ -2,7 +2,7 @@
 
 ## Phase
 
-Initial demo scaffold complete.
+Initial demo scaffold complete and published.
 
 ## Current Work
 
@@ -12,6 +12,13 @@ Python demo for lead discovery is in place with:
 - local SQLite persistence in `data/leads.db`
 - CLI entrypoint via `python -m leadfinder run`
 - wrapper script via `scripts/run_leadfinder.sh`
+- public GitHub repo at `https://github.com/Magnus-Gille/demo_hito`
+
+## Repo State
+
+- branch: `main`
+- latest commit: `9a6dfdf` (`Initial lead finder demo`)
+- remote: `origin -> https://github.com/Magnus-Gille/demo_hito.git`
 
 ## Verified
 
