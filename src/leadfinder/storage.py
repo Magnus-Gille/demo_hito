@@ -298,7 +298,7 @@ def fetch_contacts_for_lead(connection: sqlite3.Connection, company_key: str) ->
 
 
 def export_leads_csv(connection: sqlite3.Connection, output_path: str, limit: int = 200) -> int:
-    """Export top leads to CSV for easy review."""
+    """Export top leads to a GitHub-friendly CSV for easy review."""
     rows = connection.execute(
         """
         select
@@ -315,12 +315,18 @@ def export_leads_csv(connection: sqlite3.Connection, output_path: str, limit: in
 
     path = Path(output_path)
     path.parent.mkdir(parents=True, exist_ok=True)
-    with open(path, "w", newline="", encoding="utf-8-sig") as f:
-        writer = csv.writer(f, delimiter=";")
+    with open(path, "w", newline="", encoding="utf-8") as f:
+        writer = csv.writer(
+            f,
+            delimiter=",",
+            quotechar='"',
+            quoting=csv.QUOTE_MINIMAL,
+            lineterminator="\n",
+        )
         writer.writerow([
-            "Bolag", "Score", "Storlek", "Omsättning", "Bransch",
-            "Plats", "LinkedIn", "Hemsida", "Triggers", "Nyheter",
-            "Jobbannonser", "Hittad", "Uppdaterad",
+            "Company", "Score", "Employee band", "Revenue band", "Industry",
+            "Location", "LinkedIn", "Website", "Triggers", "Recent news",
+            "Job postings", "Created at", "Updated at",
         ])
         for row in rows:
             writer.writerow([
@@ -332,13 +338,25 @@ def export_leads_csv(connection: sqlite3.Connection, output_path: str, limit: in
                 row["location"] or "",
                 row["linkedin_url"] or "",
                 row["website"] or "",
-                row["trigger_keywords"],
-                row["recent_news"],
-                row["job_postings"],
+                flatten_json_text_list(row["trigger_keywords"]),
+                flatten_json_text_list(row["recent_news"]),
+                flatten_json_text_list(row["job_postings"]),
                 row["created_at"],
                 row["updated_at"],
             ])
     return len(rows)
+
+
+def flatten_json_text_list(value: str | None) -> str:
+    if not value:
+        return ""
+    try:
+        parsed = json.loads(value)
+    except (TypeError, json.JSONDecodeError):
+        return value
+    if not isinstance(parsed, list):
+        return str(parsed)
+    return " | ".join(str(item) for item in parsed if item)
 
 
 def longer_name(existing: str, candidate: str) -> str:
