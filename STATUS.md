@@ -13,6 +13,7 @@ Python demo for lead discovery is in place with:
 - CLI entrypoint via `python -m leadfinder run`
 - wrapper script via `scripts/run_leadfinder.sh`
 - public GitHub repo at `https://github.com/Magnus-Gille/demo_hito`
+- tracked sample data in `demo-data/` for public demo purposes
 
 ## Repo State
 
