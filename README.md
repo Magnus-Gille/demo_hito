@@ -1,0 +1,100 @@
+# Lead Finder Demo
+
+This is a very small local demo for finding company leads for recruitment sales.
+
+It searches the public web, looks for company signals with extra attention on LinkedIn company pages, scores the matches, and stores the results in a local SQLite database on your computer.
+
+## What it does
+
+- runs a set of web searches aimed at finding companies that appear to be hiring or growing
+- gives extra weight to public LinkedIn company URLs
+- tries to infer company size, revenue range, and hiring signals from search result titles and snippets
+- stores leads and raw evidence in a local SQLite database
+
+## How it works
+
+The script does not use a browser automation stack and it does not log into LinkedIn.
+
+Instead, it:
+
+1. sends normal HTTP requests to public search result pages
+2. parses the returned HTML
+3. extracts result titles, snippets, and URLs
+4. scores and groups those results into candidate companies
+5. writes the output into SQLite
+
+## Dependencies
+
+Runtime:
+
+- Python 3.10+
+- SQLite, via Python's built-in `sqlite3`
+
+Python packages:
+
+- `requests` for HTTP requests
+- `beautifulsoup4` for parsing HTML
+
+## Web search details
+
+Web search is done through public HTML search pages:
+
+- Brave Search
+- DuckDuckGo HTML results
+
+The code uses `requests` plus `BeautifulSoup` to fetch and parse those pages. It does not use an official search API.
+
+## LLM / API usage
+
+There is no LLM API in this project.
+
+- no OpenAI API
+- no Anthropic API
+- no embeddings
+- no external enrichment API
+
+Everything is heuristic and based on public search results.
+
+## Local database
+
+By default the database is written to `data/leads.db`.
+
+Tables:
+
+- `runs`: one row per execution
+- `leads`: deduplicated company candidates
+- `evidence`: raw search hits connected to each lead
+
+## Install
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+```
+
+## Run
+
+```bash
+./scripts/run_leadfinder.sh
+```
+
+or
+
+```bash
+source .venv/bin/activate
+PYTHONPATH=src python -m leadfinder run
+```
+
+Example with explicit limits:
+
+```bash
+PYTHONPATH=src python -m leadfinder run --db data/leads.db --limit-per-query 8 --company-limit 12
+```
+
+## Limitations
+
+- This is a demo, not a production-grade lead pipeline.
+- Search result scraping is brittle and can break if search providers change their HTML.
+- Search providers can rate-limit repeated runs.
+- Company size and revenue are estimated heuristically from public snippets, not verified from a structured company database.
